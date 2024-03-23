@@ -2,3 +2,4 @@ info.txt
 /venv*
 /FriendCircle/FriendCircle/__p*
 /FriendCircle/base/migrations*
+/FriendCircle/base/__py*
