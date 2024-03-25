@@ -3,6 +3,10 @@ from django.http import HttpResponse
 from .models import Room, Topic
 from .forms import RoomForm
 from django.db.models import Q
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -21,8 +25,30 @@ from django.db.models import Q
 #     }
 # ]
 
+def loginPage(request):
+    if request.method=="POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        try:
+            user = User.objects.get(username=username)
+        except:
+            messages.error(request, "Username OR password does not exists")
+        user = authenticate(request, username=username, password=password)
+        print(user)
+        if user is not None:
+            login(request, user)
+            return redirect("home")
+        else:
+            messages.error(request,"Username OR password does not exists")
+    context = {}
+    return render(request, 'base/login_register.html', context)
+
+def logoutUser(request):
+    logout(request)
+    return redirect("home")
+
 def home(request):
-    print(request)
+    # print(request)
     q = request.GET.get("q") if request.GET.get("q") else ""
     rooms = Room.objects.filter(
         Q(topic__name__icontains=q) | 
