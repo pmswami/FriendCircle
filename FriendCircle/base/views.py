@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 
 # Create your views here.
 
@@ -26,10 +27,11 @@ from django.contrib.auth.decorators import login_required
 # ]
 
 def loginPage(request):
+    page="login"
     if request.user.is_authenticated:
         return redirect("home")
     if request.method=="POST":
-        username = request.POST.get("username")
+        username = request.POST.get("username").lower()
         password = request.POST.get("password")
         try:
             user = User.objects.get(username=username)
@@ -42,12 +44,27 @@ def loginPage(request):
             return redirect("home")
         else:
             messages.error(request,"Username OR password does not exists")
-    context = {}
+    context = {"page":"login"}
     return render(request, 'base/login_register.html', context)
 
 def logoutUser(request):
     logout(request)
     return redirect("home")
+
+def registerPage(request):
+    # page = "register"
+    form = UserCreationForm()
+    if request.method=="POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            login(request, user)
+            return redirect("home")
+        else:
+            messages.error(request, "An error has occurred during registration")
+    return render(request, 'base/login_register.html', {"form": form} )
 
 def home(request):
     # print(request)
