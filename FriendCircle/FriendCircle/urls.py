@@ -8,4 +8,5 @@ urlpatterns = [
     path("", include("base.urls")),
     # path('', home),
     # path('room/', room)
+    path("api/", include('base.api.urls'))
 ]
