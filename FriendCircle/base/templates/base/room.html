@@ -81,7 +81,7 @@
               class="room__author"
             >
               <div class="avatar avatar--small">
-                <img src="https://randomuser.me/api/portraits/men/37.jpg" />
+                <img src="{{ room.host.avatar.url }}" />
               </div>
               <span>@{{ room.host.username }}</span>
             </a>
@@ -99,9 +99,7 @@
                     class="thread__authorInfo"
                   >
                     <div class="avatar avatar--small">
-                      <img
-                        src="https://randomuser.me/api/portraits/men/37.jpg"
-                      />
+                      <img src="{{ message.user.avatar.url }}" />
                     </div>
                     <span>@{{ message.user }}</span>
                   </a>
